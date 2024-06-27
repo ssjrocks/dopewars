@@ -15,7 +15,7 @@ $stmt->bindParam(':id', $user_id);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Handle repayments and deposits
+// Handle repayments, deposits, and withdrawals
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['repay_amount'])) {
         $repay_amount = (float) $_POST['repay_amount'];
@@ -42,6 +42,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($deposit_amount > 0 && $deposit_amount <= $user['cash']) {
             $stmt = $conn->prepare("UPDATE users SET cash = cash - :deposit_amount, bank = bank + :deposit_amount WHERE id = :id");
             $stmt->bindParam(':deposit_amount', $deposit_amount);
+            $stmt->bindParam(':id', $user_id);
+            $stmt->execute();
+        }
+    }
+
+    if (isset($_POST['withdraw_amount'])) {
+        $withdraw_amount = (float) $_POST['withdraw_amount'];
+        if ($withdraw_amount > 0 && $withdraw_amount <= $user['bank']) {
+            $stmt = $conn->prepare("UPDATE users SET cash = cash + :withdraw_amount, bank = bank - :withdraw_amount WHERE id = :id");
+            $stmt->bindParam(':withdraw_amount', $withdraw_amount);
             $stmt->bindParam(':id', $user_id);
             $stmt->execute();
         }
@@ -84,6 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <h3>Deposit Money</h3>
             <input type="number" name="deposit_amount" step="0.01" placeholder="Amount to deposit" required>
             <button type="submit" class="green-button">Deposit</button>
+        </form>
+
+        <form method="POST">
+            <h3>Withdraw Money</h3>
+            <input type="number" name="withdraw_amount" step="0.01" placeholder="Amount to withdraw" required>
+            <button type="submit" class="green-button">Withdraw</button>
         </form>
 
         <button class="green-button" onclick="window.location.href='game.php'">Back to Game</button>
