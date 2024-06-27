@@ -109,7 +109,7 @@ if (isset($_GET['error'])) {
                     <?php endforeach; ?>
                 </ul>
                 <div class="buy-buttons">
-                    <form id="buy-form" method="POST" onsubmit="buy(event)">
+                    <form id="buy-form" method="POST">
                         <input type="hidden" name="good_id" value="">
                         <input type="hidden" name="quantity" value="">
                         <button type="button" class="green-button" onclick="setQuantityAndBuy(1)">Buy 1</button>
@@ -124,7 +124,7 @@ if (isset($_GET['error'])) {
                     <!-- Inventory items will be populated here -->
                 </ul>
                 <div class="sell-buttons">
-                    <form id="sell-form" method="POST" onsubmit="sell(event)">
+                    <form id="sell-form" method="POST">
                         <input type="hidden" name="good_id" value="">
                         <input type="hidden" name="quantity" value="">
                         <button type="button" class="green-button" onclick="setQuantityAndSell(1)">Sell 1</button>
@@ -168,16 +168,15 @@ if (isset($_GET['error'])) {
 
         function setQuantityAndBuy(quantity) {
             document.querySelector('#buy-form input[name="quantity"]').value = quantity;
-            document.getElementById('buy-form').submit();
+            buy();
         }
 
         function setQuantityAndSell(quantity) {
             document.querySelector('#sell-form input[name="quantity"]').value = quantity;
-            document.getElementById('sell-form').submit();
+            sell();
         }
 
-        function buy(event) {
-            event.preventDefault();
+        function buy() {
             const formData = new FormData(document.getElementById('buy-form'));
             fetch('buy.php', {
                 method: 'POST',
@@ -194,8 +193,7 @@ if (isset($_GET['error'])) {
             });
         }
 
-        function sell(event) {
-            event.preventDefault();
+        function sell() {
             const formData = new FormData(document.getElementById('sell-form'));
             fetch('sell.php', {
                 method: 'POST',
