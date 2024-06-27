@@ -25,6 +25,9 @@ $locations_stmt = $conn->prepare("SELECT * FROM locations");
 $locations_stmt->execute();
 $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Fetch current location ID from user data
+$current_location_id = $user['location_id'];
+
 // Fetch current location name
 $current_location = '';
 foreach ($locations as $location) {
@@ -219,9 +222,9 @@ if (isset($_GET['error'])) {
         }
 
         function updateUserInfo(user) {
-            document.getElementById('cash').textContent = user.cash.toFixed(2);
-            document.getElementById('bank').textContent = user.bank.toFixed(2);
-            document.getElementById('debt').textContent = user.debt.toFixed(2);
+            document.getElementById('cash').textContent = parseFloat(user.cash).toFixed(2);
+            document.getElementById('bank').textContent = parseFloat(user.bank).toFixed(2);
+            document.getElementById('debt').textContent = parseFloat(user.debt).toFixed(2);
         }
 
         function updateInventory(inventory) {
