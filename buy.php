@@ -41,16 +41,34 @@ if ($good) {
         $stmt->bindParam(':id', $user_id);
         $stmt->execute();
 
-        // Update user inventory
-        $stmt = $conn->prepare("INSERT INTO inventory (user_id, good_id, quantity, average_price) VALUES (:user_id, :good_id, :quantity, :price)
-                                ON DUPLICATE KEY UPDATE 
-                                    quantity = quantity + VALUES(quantity),
-                                    average_price = (average_price * quantity + VALUES(quantity) * VALUES(average_price)) / (quantity + VALUES(quantity))");
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->bindParam(':good_id', $good_id);
-        $stmt->bindParam(':quantity', $quantity);
-        $stmt->bindParam(':price', $price);
-        $stmt->execute();
+        // Check if the item already exists in the inventory
+        $inventory_check_stmt = $conn->prepare("SELECT quantity, average_price FROM inventory WHERE user_id = :user_id AND good_id = :good_id");
+        $inventory_check_stmt->bindParam(':user_id', $user_id);
+        $inventory_check_stmt->bindParam(':good_id', $good_id);
+        $inventory_check_stmt->execute();
+        $inventory_item = $inventory_check_stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($inventory_item) {
+            // Calculate the new average price
+            $new_quantity = $inventory_item['quantity'] + $quantity;
+            $new_average_price = (($inventory_item['quantity'] * $inventory_item['average_price']) + ($quantity * $price)) / $new_quantity;
+
+            // Update inventory with new quantity and average price
+            $update_inventory_stmt = $conn->prepare("UPDATE inventory SET quantity = :quantity, average_price = :average_price WHERE user_id = :user_id AND good_id = :good_id");
+            $update_inventory_stmt->bindParam(':quantity', $new_quantity);
+            $update_inventory_stmt->bindParam(':average_price', $new_average_price);
+            $update_inventory_stmt->bindParam(':user_id', $user_id);
+            $update_inventory_stmt->bindParam(':good_id', $good_id);
+            $update_inventory_stmt->execute();
+        } else {
+            // Insert new item into inventory
+            $insert_inventory_stmt = $conn->prepare("INSERT INTO inventory (user_id, good_id, quantity, average_price) VALUES (:user_id, :good_id, :quantity, :average_price)");
+            $insert_inventory_stmt->bindParam(':user_id', $user_id);
+            $insert_inventory_stmt->bindParam(':good_id', $good_id);
+            $insert_inventory_stmt->bindParam(':quantity', $quantity);
+            $insert_inventory_stmt->bindParam(':average_price', $price);
+            $insert_inventory_stmt->execute();
+        }
 
         // Fetch updated user data
         $stmt = $conn->prepare("SELECT cash, bank, debt FROM users WHERE id = :id");
