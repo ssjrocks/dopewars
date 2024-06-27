@@ -133,21 +133,37 @@ p {
     background-color: #b3d4fc;
 }
 
-.action-buttons {
+.buy-buttons, .sell-buttons {
     text-align: center;
     margin-top: 10px;
 }
 
-.action-buttons button {
-    padding: 5px 10px;
-    margin: 0 5px;
-    background-color: #5cb85c;
-    border: 1px solid #ccc;
-    cursor: pointer;
+.buy-buttons form, .sell-buttons form {
+    display: block;
+    margin: 0 auto;
 }
 
-.action-buttons button:hover {
+.buy-buttons button, .sell-buttons button {
+    padding: 5px 10px;
+    margin: 5px 0;
+    background-color: #5cb85c;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.buy-buttons button:hover, .sell-buttons button:hover {
     background-color: #4cae4c;
+}
+
+.finances-button {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.finances-button .green-button {
+    width: calc(100% - 40px); /* Adjust width to be centered and full width */
+    margin: 0 auto;
 }
 
 .actions {
@@ -157,29 +173,5 @@ p {
 
 .actions button {
     padding: 10px 20px;
-    margin: 0 10px;
-    background-color: #5cb85c;
-    border: 1px solid #ccc;
-    cursor: pointer;
-}
-
-.actions button:hover {
-    background-color: #4cae4c;
-}
-
-.footer {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.footer button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    background-color: #5cb85c;
-    border: 1px solid #ccc;
-    cursor: pointer;
-}
-
-.footer button:hover {
-    background-color: #4cae4c;
+    margin: 0 10
 }

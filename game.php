@@ -59,7 +59,7 @@ $current_location_id = $user['location_id'];
             <?php foreach ($locations as $location): ?>
                 <form method="POST" action="travel.php" style="display: inline;">
                     <input type="hidden" name="location_id" value="<?php echo $location['id']; ?>">
-                    <button class="<?php echo $location['id'] == $current_location_id ? 'current-location' : ''; ?>">
+                    <button class="<?php echo $location['id'] == $current_location_id ? 'current-location' : 'location-button'; ?>">
                         <?php echo $location['name']; ?>
                     </button>
                 </form>
@@ -75,38 +75,22 @@ $current_location_id = $user['location_id'];
                         </li>
                     <?php endforeach; ?>
                 </ul>
-                <div class="action-buttons">
-                    <form method="POST" action="buy.php" style="display: inline;">
+                <div class="buy-buttons">
+                    <form method="POST" action="buy.php">
                         <input type="hidden" name="good_id" value="">
                         <input type="hidden" name="quantity" value="1">
                         <button class="green-button">Buy One</button>
                     </form>
-                    <form method="POST" action="buy.php" style="display: inline;">
+                    <form method="POST" action="buy.php">
                         <input type="hidden" name="good_id" value="">
                         <input type="hidden" name="quantity" value="2">
                         <button class="green-button">Buy Two</button>
                     </form>
-                    <form method="POST" action="buy.php" style="display: inline;">
+                    <form method="POST" action="buy.php">
                         <input type="hidden" name="good_id" value="">
                         <input type="hidden" name="quantity" value="3">
                         <button class="green-button">Buy Three</button>
                     </form>
-                    <form method="POST" action="sell.php" style="display: inline;">
-                        <input type="hidden" name="good_id" value="">
-                        <input type="hidden" name="quantity" value="1">
-                        <button class="green-button">Sell One</button>
-                    </form>
-                    <form method="POST" action="sell.php" style="display: inline;">
-                        <input type="hidden" name="good_id" value="">
-                        <input type="hidden" name="quantity" value="2">
-                        <button class="green-button">Sell Two</button>
-                    </form>
-                    <form method="POST" action="sell.php" style="display: inline;">
-                        <input type="hidden" name="good_id" value="">
-                        <input type="hidden" name="quantity" value="3">
-                        <button class="green-button">Sell Three</button>
-                    </form>
-                    <button class="green-button" onclick="window.location.href='finances.php'">Finances</button>
                 </div>
             </div>
             <div class="inventory">
@@ -114,7 +98,27 @@ $current_location_id = $user['location_id'];
                 <ul>
                     <!-- Inventory items will be populated here -->
                 </ul>
+                <div class="sell-buttons">
+                    <form method="POST" action="sell.php">
+                        <input type="hidden" name="good_id" value="">
+                        <input type="hidden" name="quantity" value="1">
+                        <button class="green-button">Sell One</button>
+                    </form>
+                    <form method="POST" action="sell.php">
+                        <input type="hidden" name="good_id" value="">
+                        <input type="hidden" name="quantity" value="2">
+                        <button class="green-button">Sell Two</button>
+                    </form>
+                    <form method="POST" action="sell.php">
+                        <input type="hidden" name="good_id" value="">
+                        <input type="hidden" name="quantity" value="3">
+                        <button class="green-button">Sell Three</button>
+                    </form>
+                </div>
             </div>
+        </div>
+        <div class="finances-button">
+            <button class="green-button" onclick="window.location.href='finances.php'">Finances</button>
         </div>
         <div class="footer">
             <button class="green-button">New Game</button>
