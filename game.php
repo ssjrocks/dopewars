@@ -121,8 +121,10 @@ $current_location_id = $user['location_id'];
             <button class="green-button" onclick="window.location.href='finances.php'">Finances</button>
         </div>
         <div class="footer">
-            <button class="green-button">New Game</button>
-            <button class="green-button">Exit</button>
+            <form method="POST" action="new_game.php">
+                <button type="submit" class="green-button">New Game</button>
+            </form>
+            <button class="green-button" onclick="window.location.href='login.php'">Exit</button>
         </div>
     </div>
 </body>

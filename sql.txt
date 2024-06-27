@@ -42,3 +42,39 @@ INSERT INTO locations (name) VALUES
 ('Chicago'),
 ('Houston'),
 ('Miami');
+
+
+ALTER TABLE users ADD COLUMN location_id INT DEFAULT 1;
+
+CREATE TABLE IF NOT EXISTS goods (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    min_price DECIMAL(10, 2) NOT NULL,
+    max_price DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS inventory (
+    user_id INT,
+    good_id INT,
+    quantity INT DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (good_id) REFERENCES goods(id)
+);
+
+CREATE TABLE IF NOT EXISTS locations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+
+
+
+
+
+
+
+
+
+ALTER TABLE users ADD COLUMN debt DECIMAL(10, 2) DEFAULT 5500;
+ALTER TABLE users ADD COLUMN bank DECIMAL(10, 2) DEFAULT 0;
+ALTER TABLE users ADD COLUMN health INT DEFAULT 100;
