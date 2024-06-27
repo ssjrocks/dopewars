@@ -2,8 +2,10 @@
 include 'db.php';
 session_start();
 
+header('Content-Type: application/json');
+
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    echo json_encode(['status' => 'error', 'message' => 'Not logged in']);
     exit();
 }
 
@@ -12,7 +14,7 @@ $good_id = $_POST['good_id'];
 $quantity = $_POST['quantity'];
 
 if (empty($good_id) || empty($quantity)) {
-    header('Location: game.php?error=invalid_buy');
+    echo json_encode(['status' => 'error', 'message' => 'You wanna buy nothing?']);
     exit();
 }
 
@@ -47,11 +49,23 @@ if ($good) {
         $stmt->bindParam(':quantity', $quantity);
         $stmt->execute();
 
-        header('Location: game.php');
+        // Fetch updated user data
+        $stmt = $conn->prepare("SELECT cash, bank, debt FROM users WHERE id = :id");
+        $stmt->bindParam(':id', $user_id);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Fetch updated inventory
+        $inventory_stmt = $conn->prepare("SELECT goods.name, inventory.quantity FROM inventory JOIN goods ON inventory.good_id = goods.id WHERE user_id = :user_id");
+        $inventory_stmt->bindParam(':user_id', $user_id);
+        $inventory_stmt->execute();
+        $inventory = $inventory_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode(['status' => 'success', 'user' => $user, 'inventory' => $inventory]);
     } else {
-        header('Location: game.php?error=insufficient_cash');
+        echo json_encode(['status' => 'error', 'message' => 'You can\'t afford that.']);
     }
 } else {
-    header('Location: game.php?error=invalid_buy');
+    echo json_encode(['status' => 'error', 'message' => 'Invalid good selected.']);
 }
 ?>

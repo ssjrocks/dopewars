@@ -39,10 +39,10 @@ if (isset($_GET['error'])) {
             $error_message = "You can't afford that.";
             break;
         case 'invalid_sell':
-            $error_message = "You wanna sell nothing?";
+            $error_message = "Sell what, your soul?";
             break;
         case 'insufficient_inventory':
-            $error_message = "You don't have enough inventory.";
+            $error_message = "Hey you tryna stiff me?";
             break;
     }
 }
@@ -52,14 +52,17 @@ if (isset($_GET['error'])) {
 <head>
     <title>DopeWars</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script>
-        function selectItem(event) {
-            var items = document.querySelectorAll('.selectable');
-            items.forEach(item => item.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
-            document.querySelector('input[name="good_id"]').value = event.currentTarget.dataset.id;
+    <style>
+        .error-message {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            display: none;
         }
-    </script>
+        .hidden-placeholder {
+            visibility: hidden;
+        }
+    </style>
 </head>
 <body>
     <div class="game-container">
@@ -75,21 +78,20 @@ if (isset($_GET['error'])) {
         </div>
         <div class="locations">
             <h2>Subway from:</h2>
-            <?php foreach ($locations as $location): ?>
-                <form method="POST" action="travel.php" style="display: inline;">
-                    <input type="hidden" name="location_id" value="<?php echo $location['id']; ?>">
-                    <button class="<?php echo $location['id'] == $current_location_id ? 'current-location' : 'location-button'; ?>">
+            <select id="location-select">
+                <?php foreach ($locations as $location): ?>
+                    <option value="<?php echo $location['id']; ?>" <?php echo $location['id'] == $current_location_id ? 'selected' : ''; ?>>
                         <?php echo $location['name']; ?>
-                    </button>
-                </form>
-            <?php endforeach; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <button onclick="travel()">Go</button>
         </div>
+        <div id="error-placeholder" class="hidden-placeholder">Error Placeholder</div>
+        <div id="error-message" class="error-message"><?php echo $error_message; ?></div>
         <div class="main-content">
             <div class="goods">
                 <h2>Available Drugs:</h2>
-                <?php if ($error_message): ?>
-                    <p class="error"><?php echo $error_message; ?></p>
-                <?php endif; ?>
                 <ul>
                     <?php foreach ($goods as $good): ?>
                         <li class="selectable" data-id="<?php echo $good['id']; ?>" onclick="selectItem(event)">
@@ -98,43 +100,27 @@ if (isset($_GET['error'])) {
                     <?php endforeach; ?>
                 </ul>
                 <div class="buy-buttons">
-                    <form method="POST" action="buy.php">
+                    <form id="buy-form" method="POST" onsubmit="buy(event)">
                         <input type="hidden" name="good_id" value="">
-                        <input type="hidden" name="quantity" value="1">
-                        <button class="green-button">Buy One</button>
-                    </form>
-                    <form method="POST" action="buy.php">
-                        <input type="hidden" name="good_id" value="">
-                        <input type="hidden" name="quantity" value="2">
-                        <button class="green-button">Buy Two</button>
-                    </form>
-                    <form method="POST" action="buy.php">
-                        <input type="hidden" name="good_id" value="">
-                        <input type="hidden" name="quantity" value="3">
-                        <button class="green-button">Buy Three</button>
+                        <input type="hidden" name="quantity" value="">
+                        <button type="button" class="green-button" onclick="setQuantityAndBuy(1)">Buy 1</button>
+                        <button type="button" class="green-button" onclick="setQuantityAndBuy(10)">Buy 10</button>
+                        <button type="button" class="green-button" onclick="setQuantityAndBuy(25)">Buy 25</button>
                     </form>
                 </div>
             </div>
             <div class="inventory">
                 <h2>Trenchcoat: Usage 0/100</h2>
-                <ul>
+                <ul id="inventory-list">
                     <!-- Inventory items will be populated here -->
                 </ul>
                 <div class="sell-buttons">
-                    <form method="POST" action="sell.php">
+                    <form id="sell-form" method="POST" onsubmit="sell(event)">
                         <input type="hidden" name="good_id" value="">
-                        <input type="hidden" name="quantity" value="1">
-                        <button class="green-button">Sell One</button>
-                    </form>
-                    <form method="POST" action="sell.php">
-                        <input type="hidden" name="good_id" value="">
-                        <input type="hidden" name="quantity" value="2">
-                        <button class="green-button">Sell Two</button>
-                    </form>
-                    <form method="POST" action="sell.php">
-                        <input type="hidden" name="good_id" value="">
-                        <input type="hidden" name="quantity" value="3">
-                        <button class="green-button">Sell Three</button>
+                        <input type="hidden" name="quantity" value="">
+                        <button type="button" class="green-button" onclick="setQuantityAndSell(1)">Sell 1</button>
+                        <button type="button" class="green-button" onclick="setQuantityAndSell(10)">Sell 10</button>
+                        <button type="button" class="green-button" onclick="setQuantityAndSell(25)">Sell 25</button>
                     </form>
                 </div>
             </div>
@@ -149,5 +135,98 @@ if (isset($_GET['error'])) {
             <button class="green-button" onclick="window.location.href='login.php'">Exit</button>
         </div>
     </div>
+    <script>
+        function selectItem(event) {
+            var items = document.querySelectorAll('.selectable');
+            items.forEach(item => item.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            document.querySelector('#buy-form input[name="good_id"]').value = event.currentTarget.dataset.id;
+            document.querySelector('#sell-form input[name="good_id"]').value = event.currentTarget.dataset.id;
+        }
+
+        function travel() {
+            const locationId = document.getElementById('location-select').value;
+            fetch('travel.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `location_id=${locationId}`
+            })
+            .then(response => response.text())
+            .then(() => {
+                location.reload();
+            });
+        }
+
+        function setQuantityAndBuy(quantity) {
+            document.querySelector('#buy-form input[name="quantity"]').value = quantity;
+            document.getElementById('buy-form').submit();
+        }
+
+        function setQuantityAndSell(quantity) {
+            document.querySelector('#sell-form input[name="quantity"]').value = quantity;
+            document.getElementById('sell-form').submit();
+        }
+
+        function buy(event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById('buy-form'));
+            fetch('buy.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'error') {
+                    showError(data.message);
+                } else {
+                    updateUserInfo(data.user);
+                    updateInventory(data.inventory);
+                }
+            });
+        }
+
+        function sell(event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById('sell-form'));
+            fetch('sell.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'error') {
+                    showError(data.message);
+                } else {
+                    updateUserInfo(data.user);
+                    updateInventory(data.inventory);
+                }
+            });
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        function updateUserInfo(user) {
+            document.querySelector('.status div:nth-child(1)').textContent = `Cash: $${user.cash}`;
+            document.querySelector('.status div:nth-child(2)').textContent = `Bank: $${user.bank}`;
+            document.querySelector('.status div:nth-child(3)').textContent = `Debt: $${user.debt}`;
+        }
+
+        function updateInventory(inventory) {
+            const inventoryList = document.getElementById('inventory-list');
+            inventoryList.innerHTML = '';
+            inventory.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - ${item.quantity}`;
+                inventoryList.appendChild(li);
+            });
+        }
+    </script>
 </body>
 </html>
