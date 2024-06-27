@@ -43,7 +43,7 @@ $current_location_id = 1; // Example current location id
     </script>
 </head>
 <body>
-    <div class="container">
+    <div class="game-container">
         <div class="header">
             <h1>DopeWars</h1>
         </div>
