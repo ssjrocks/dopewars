@@ -49,6 +49,12 @@ if ($good) {
         $stmt->bindParam(':quantity', $quantity);
         $stmt->execute();
 
+        // Remove inventory row if quantity is zero
+        $stmt = $conn->prepare("DELETE FROM inventory WHERE user_id = :user_id AND good_id = :good_id AND quantity <= 0");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':good_id', $good_id);
+        $stmt->execute();
+
         // Fetch updated user data
         $stmt = $conn->prepare("SELECT cash, bank, debt FROM users WHERE id = :id");
         $stmt->bindParam(':id', $user_id);
@@ -56,7 +62,7 @@ if ($good) {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // Fetch updated inventory
-        $inventory_stmt = $conn->prepare("SELECT goods.name, inventory.quantity FROM inventory JOIN goods ON inventory.good_id = goods.id WHERE user_id = :user_id");
+        $inventory_stmt = $conn->prepare("SELECT goods.id, goods.name, inventory.quantity, inventory.average_price FROM inventory JOIN goods ON inventory.good_id = goods.id WHERE inventory.user_id = :user_id");
         $inventory_stmt->bindParam(':user_id', $user_id);
         $inventory_stmt->execute();
         $inventory = $inventory_stmt->fetchAll(PDO::FETCH_ASSOC);

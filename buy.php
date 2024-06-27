@@ -42,11 +42,14 @@ if ($good) {
         $stmt->execute();
 
         // Update user inventory
-        $stmt = $conn->prepare("INSERT INTO inventory (user_id, good_id, quantity) VALUES (:user_id, :good_id, :quantity)
-                                ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)");
+        $stmt = $conn->prepare("INSERT INTO inventory (user_id, good_id, quantity, average_price) VALUES (:user_id, :good_id, :quantity, :price)
+                                ON DUPLICATE KEY UPDATE 
+                                    quantity = quantity + VALUES(quantity),
+                                    average_price = (average_price * quantity + VALUES(quantity) * VALUES(average_price)) / (quantity + VALUES(quantity))");
         $stmt->bindParam(':user_id', $user_id);
         $stmt->bindParam(':good_id', $good_id);
         $stmt->bindParam(':quantity', $quantity);
+        $stmt->bindParam(':price', $price);
         $stmt->execute();
 
         // Fetch updated user data
@@ -56,7 +59,7 @@ if ($good) {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // Fetch updated inventory
-        $inventory_stmt = $conn->prepare("SELECT goods.name, inventory.quantity FROM inventory JOIN goods ON inventory.good_id = goods.id WHERE user_id = :user_id");
+        $inventory_stmt = $conn->prepare("SELECT goods.id, goods.name, inventory.quantity, inventory.average_price FROM inventory JOIN goods ON inventory.good_id = goods.id WHERE inventory.user_id = :user_id");
         $inventory_stmt->bindParam(':user_id', $user_id);
         $inventory_stmt->execute();
         $inventory = $inventory_stmt->fetchAll(PDO::FETCH_ASSOC);

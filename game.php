@@ -37,6 +37,12 @@ foreach ($locations as $location) {
     }
 }
 
+// Fetch inventory
+$inventory_stmt = $conn->prepare("SELECT goods.id, goods.name, inventory.quantity, inventory.average_price FROM inventory JOIN goods ON inventory.good_id = goods.id WHERE inventory.user_id = :user_id");
+$inventory_stmt->bindParam(':user_id', $user_id);
+$inventory_stmt->execute();
+$inventory = $inventory_stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Handle errors
 $error_message = '';
 if (isset($_GET['error'])) {
@@ -71,6 +77,9 @@ if (isset($_GET['error'])) {
         .hidden-placeholder {
             visibility: hidden;
         }
+        .selected {
+            background-color: #ddd;
+        }
     </style>
 </head>
 <body>
@@ -86,7 +95,7 @@ if (isset($_GET['error'])) {
             <div>Health: 100%</div>
         </div>
         <div class="locations">
-            <h2>Subway from: <?php echo $current_location; ?></h2>
+            <h2>Subway from: <span id="current-location"><?php echo $current_location; ?></span></h2>
             <select id="location-select">
                 <?php foreach ($locations as $location): ?>
                     <option value="<?php echo $location['id']; ?>" <?php echo $location['id'] == $current_location_id ? 'selected' : ''; ?>>
@@ -101,9 +110,9 @@ if (isset($_GET['error'])) {
         <div class="main-content">
             <div class="goods">
                 <h2>Available Drugs:</h2>
-                <ul>
+                <ul id="available-goods">
                     <?php foreach ($goods as $good): ?>
-                        <li class="selectable" data-id="<?php echo $good['id']; ?>" onclick="selectItem(event)">
+                        <li class="selectable" data-id="<?php echo $good['id']; ?>" onclick="selectItem(event, 'available')">
                             <?php echo $good['name'] . " - $" . rand($good['min_price'], $good['max_price']); ?>
                         </li>
                     <?php endforeach; ?>
@@ -119,9 +128,13 @@ if (isset($_GET['error'])) {
                 </div>
             </div>
             <div class="inventory">
-                <h2>Trenchcoat: Usage 0/100</h2>
+                <h2>Trenchcoat: Usage <span id="trenchcoat-usage">0</span>/100</h2>
                 <ul id="inventory-list">
-                    <!-- Inventory items will be populated here -->
+                    <?php foreach ($inventory as $item): ?>
+                        <li class="selectable" data-id="<?php echo $item['id']; ?>" onclick="selectItem(event, 'inventory')">
+                            <?php echo $item['name'] . " - " . $item['quantity'] . " @ $" . number_format($item['average_price'], 2); ?>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
                 <div class="sell-buttons">
                     <form id="sell-form" method="POST">
@@ -145,12 +158,40 @@ if (isset($_GET['error'])) {
         </div>
     </div>
     <script>
-        function selectItem(event) {
-            var items = document.querySelectorAll('.selectable');
+        let selectedGoodId = null;
+
+        function selectItem(event, list) {
+            const items = document.querySelectorAll('.selectable');
             items.forEach(item => item.classList.remove('selected'));
             event.currentTarget.classList.add('selected');
-            document.querySelector('#buy-form input[name="good_id"]').value = event.currentTarget.dataset.id;
-            document.querySelector('#sell-form input[name="good_id"]').value = event.currentTarget.dataset.id;
+            selectedGoodId = event.currentTarget.dataset.id;
+            document.querySelector('#buy-form input[name="good_id"]').value = selectedGoodId;
+            document.querySelector('#sell-form input[name="good_id"]').value = selectedGoodId;
+
+            // Highlight the corresponding item in the other list
+            if (list === 'available') {
+                highlightInventoryItem(selectedGoodId);
+            } else if (list === 'inventory') {
+                highlightAvailableItem(selectedGoodId);
+            }
+        }
+
+        function highlightAvailableItem(goodId) {
+            const availableItems = document.querySelectorAll('#available-goods .selectable');
+            availableItems.forEach(item => {
+                if (item.dataset.id == goodId) {
+                    item.classList.add('selected');
+                }
+            });
+        }
+
+        function highlightInventoryItem(goodId) {
+            const inventoryItems = document.querySelectorAll('#inventory-list .selectable');
+            inventoryItems.forEach(item => {
+                if (item.dataset.id == goodId) {
+                    item.classList.add('selected');
+                }
+            });
         }
 
         function travel() {
@@ -160,9 +201,28 @@ if (isset($_GET['error'])) {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `location_id=${locationId}`
             })
-            .then(response => response.text())
-            .then(() => {
-                location.reload();
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('current-location').textContent = data.current_location;
+                    updatePrices(data.goods);
+                    updateUserInfo(data.user);
+                } else {
+                    showError(data.message);
+                }
+            });
+        }
+
+        function updatePrices(goods) {
+            const availableGoodsList = document.getElementById('available-goods');
+            availableGoodsList.innerHTML = '';
+            goods.forEach(good => {
+                const li = document.createElement('li');
+                li.className = 'selectable';
+                li.dataset.id = good.id;
+                li.onclick = (event) => selectItem(event, 'available');
+                li.textContent = `${good.name} - $${good.price}`;
+                availableGoodsList.appendChild(li);
             });
         }
 
@@ -230,9 +290,21 @@ if (isset($_GET['error'])) {
             inventoryList.innerHTML = '';
             inventory.forEach(item => {
                 const li = document.createElement('li');
-                li.textContent = `${item.name} - ${item.quantity}`;
+                li.className = 'selectable';
+                li.dataset.id = item.id;
+                li.onclick = (event) => selectItem(event, 'inventory');
+                li.textContent = `${item.name} - ${item.quantity} @ $${parseFloat(item.average_price).toFixed(2)}`;
                 inventoryList.appendChild(li);
             });
+            updateTrenchcoatUsage(inventory);
+        }
+
+        function updateTrenchcoatUsage(inventory) {
+            let totalQuantity = 0;
+            inventory.forEach(item => {
+                totalQuantity += parseInt(item.quantity);
+            });
+            document.getElementById('trenchcoat-usage').textContent = totalQuantity;
         }
     </script>
 </body>
