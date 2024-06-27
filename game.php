@@ -57,9 +57,12 @@ $current_location_id = 1; // Example current location id
         <div class="locations">
             <h2>Subway from:</h2>
             <?php foreach ($locations as $location): ?>
-                <button class="<?php echo $location['id'] == $current_location_id ? 'current-location' : ''; ?>">
-                    <?php echo $location['name']; ?>
-                </button>
+                <form method="POST" action="travel.php" style="display: inline;">
+                    <input type="hidden" name="location_id" value="<?php echo $location['id']; ?>">
+                    <button class="<?php echo $location['id'] == $current_location_id ? 'current-location' : ''; ?>">
+                        <?php echo $location['name']; ?>
+                    </button>
+                </form>
             <?php endforeach; ?>
         </div>
         <div class="main-content">
@@ -73,9 +76,21 @@ $current_location_id = 1; // Example current location id
                     <?php endforeach; ?>
                 </ul>
                 <div class="buy-buttons">
-                    <button>Buy One</button>
-                    <button>Buy Two</button>
-                    <button>Buy Three</button>
+                    <form method="POST" action="buy.php" style="display: inline;">
+                        <input type="hidden" name="good_id" value="">
+                        <input type="hidden" name="quantity" value="1">
+                        <button>Buy One</button>
+                    </form>
+                    <form method="POST" action="buy.php" style="display: inline;">
+                        <input type="hidden" name="good_id" value="">
+                        <input type="hidden" name="quantity" value="2">
+                        <button>Buy Two</button>
+                    </form>
+                    <form method="POST" action="buy.php" style="display: inline;">
+                        <input type="hidden" name="good_id" value="">
+                        <input type="hidden" name="quantity" value="3">
+                        <button>Buy Three</button>
+                    </form>
                 </div>
             </div>
             <div class="inventory">
@@ -84,14 +99,26 @@ $current_location_id = 1; // Example current location id
                     <!-- Inventory items will be populated here -->
                 </ul>
                 <div class="sell-buttons">
-                    <button>Sell One</button>
-                    <button>Sell Two</button>
-                    <button>Sell Three</button>
+                    <form method="POST" action="sell.php" style="display: inline;">
+                        <input type="hidden" name="good_id" value="">
+                        <input type="hidden" name="quantity" value="1">
+                        <button>Sell One</button>
+                    </form>
+                    <form method="POST" action="sell.php" style="display: inline;">
+                        <input type="hidden" name="good_id" value="">
+                        <input type="hidden" name="quantity" value="2">
+                        <button>Sell Two</button>
+                    </form>
+                    <form method="POST" action="sell.php" style="display: inline;">
+                        <input type="hidden" name="good_id" value="">
+                        <input type="hidden" name="quantity" value="3">
+                        <button>Sell Three</button>
+                    </form>
+                </div>
+                <div class="finance-button">
+                    <button onclick="window.location.href='finances.php'">Finances</button>
                 </div>
             </div>
-        </div>
-        <div class="actions">
-            <button>Finances</button>
         </div>
         <div class="footer">
             <button>New Game</button>

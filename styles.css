@@ -138,12 +138,12 @@ p {
     background-color: #b3d4fc;
 }
 
-.buy-buttons, .sell-buttons {
+.buy-buttons, .sell-buttons, .finance-button {
     text-align: center;
     margin-top: 10px;
 }
 
-.buy-buttons button, .sell-buttons button {
+.buy-buttons button, .sell-buttons button, .finance-button button {
     padding: 5px 10px;
     margin: 0 5px;
     background-color: #ddd;

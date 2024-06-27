@@ -18,17 +18,17 @@ $stmt->execute();
 $good = $stmt->fetch(PDO::FETCH_ASSOC);
 $price = rand($good['min_price'], $good['max_price']);
 
-// Calculate total cost
-$total_cost = $price * $quantity;
+// Calculate total revenue
+$total_revenue = $price * $quantity;
 
 // Update user cash
-$stmt = $conn->prepare("UPDATE users SET cash = cash - :total_cost WHERE id = :id");
-$stmt->bindParam(':total_cost', $total_cost);
+$stmt = $conn->prepare("UPDATE users SET cash = cash + :total_revenue WHERE id = :id");
+$stmt->bindParam(':total_revenue', $total_revenue);
 $stmt->bindParam(':id', $user_id);
 $stmt->execute();
 
 // Update user inventory
-$stmt = $conn->prepare("INSERT INTO inventory (user_id, good_id, quantity) VALUES (:user_id, :good_id, :quantity) ON DUPLICATE KEY UPDATE quantity = quantity + :quantity");
+$stmt = $conn->prepare("UPDATE inventory SET quantity = quantity - :quantity WHERE user_id = :user_id AND good_id = :good_id AND quantity >= :quantity");
 $stmt->bindParam(':user_id', $user_id);
 $stmt->bindParam(':good_id', $good_id);
 $stmt->bindParam(':quantity', $quantity);
