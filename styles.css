@@ -1,3 +1,4 @@
+/* Common Styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -57,4 +58,121 @@ form button:hover, .container button:hover {
 
 p {
     margin-top: 10px;
+}
+
+/* Game Page Styles */
+.game-container {
+    width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+
+.status {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+
+.status div {
+    background-color: #eee;
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 100px;
+    text-align: center;
+}
+
+.locations {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.locations h2 {
+    margin-bottom: 10px;
+}
+
+.locations button {
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.current-location {
+    background-color: #b3d4fc;
+    border: 1px solid #333;
+}
+
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.goods, .inventory {
+    width: 48%;
+}
+
+.goods ul, .inventory ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    height: 200px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+}
+
+.goods li, .inventory li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.selectable:hover {
+    background-color: #e9e9e9;
+}
+
+.selected {
+    background-color: #b3d4fc;
+}
+
+.buy-buttons, .sell-buttons {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.buy-buttons button, .sell-buttons button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.actions {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.actions button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.footer button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    cursor: pointer;
 }
