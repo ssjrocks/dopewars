@@ -59,15 +59,14 @@ body {
     width: 48%;
 }
 
-.goods table, .inventory table {
+.goods textarea, .inventory textarea {
     width: 100%;
-    border-collapse: collapse;
-}
-
-.goods th, .inventory th, .goods td, .inventory td {
+    height: 200px;
     border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
+    padding: 10px;
+    font-family: monospace;
+    background-color: #f9f9f9;
+    resize: none;
 }
 
 .actions {

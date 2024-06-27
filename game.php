@@ -53,29 +53,17 @@ $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="main-content">
             <div class="goods">
                 <h2>Available Drugs:</h2>
-                <table>
-                    <tr>
-                        <th>Drug</th>
-                        <th>Price</th>
-                    </tr>
+                <textarea rows="10" readonly>
                     <?php foreach ($goods as $good): ?>
-                        <tr>
-                            <td><?php echo $good['name']; ?></td>
-                            <td><?php echo rand($good['min_price'], $good['max_price']); ?></td>
-                        </tr>
+                        <?php echo $good['name'] . " - $" . rand($good['min_price'], $good['max_price']) . "\n"; ?>
                     <?php endforeach; ?>
-                </table>
+                </textarea>
             </div>
             <div class="inventory">
                 <h2>Trenchcoat. Space: 100/100</h2>
-                <table>
-                    <tr>
-                        <th>Drug</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                    </tr>
+                <textarea rows="10" readonly>
                     <!-- Inventory items will be populated here -->
-                </table>
+                </textarea>
             </div>
         </div>
         <div class="actions">
