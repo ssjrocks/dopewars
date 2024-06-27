@@ -33,7 +33,7 @@ form input {
     border-radius: 4px;
 }
 
-form button, .container button, .game-container button {
+form button, .container button, .game-container button, .green-button {
     padding: 10px;
     background-color: #5cb85c;
     color: #fff;
@@ -44,7 +44,7 @@ form button, .container button, .game-container button {
     width: 100%;
 }
 
-form button:hover, .container button:hover, .game-container button:hover {
+form button:hover, .container button:hover, .game-container button:hover, .green-button:hover {
     background-color: #4cae4c;
 }
 
@@ -86,9 +86,13 @@ p {
 .locations button {
     margin: 5px;
     padding: 10px 20px;
-    background-color: #ddd;
+    background-color: #5cb85c;
     border: 1px solid #ccc;
     cursor: pointer;
+}
+
+.locations button:hover {
+    background-color: #4cae4c;
 }
 
 .current-location {
@@ -129,17 +133,21 @@ p {
     background-color: #b3d4fc;
 }
 
-.buy-buttons, .sell-buttons, .finance-button {
+.action-buttons {
     text-align: center;
     margin-top: 10px;
 }
 
-.buy-buttons button, .sell-buttons button, .finance-button button {
+.action-buttons button {
     padding: 5px 10px;
     margin: 0 5px;
-    background-color: #ddd;
+    background-color: #5cb85c;
     border: 1px solid #ccc;
     cursor: pointer;
+}
+
+.action-buttons button:hover {
+    background-color: #4cae4c;
 }
 
 .actions {
@@ -150,9 +158,13 @@ p {
 .actions button {
     padding: 10px 20px;
     margin: 0 10px;
-    background-color: #ddd;
+    background-color: #5cb85c;
     border: 1px solid #ccc;
     cursor: pointer;
+}
+
+.actions button:hover {
+    background-color: #4cae4c;
 }
 
 .footer {
@@ -163,7 +175,11 @@ p {
 .footer button {
     padding: 10px 20px;
     margin: 0 10px;
-    background-color: #ddd;
+    background-color: #5cb85c;
     border: 1px solid #ccc;
     cursor: pointer;
+}
+
+.footer button:hover {
+    background-color: #4cae4c;
 }
