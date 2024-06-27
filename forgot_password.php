@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             Email: <input type="email" name="email" required>
             <button type="submit">Submit</button>
         </form>
+        <button onclick="window.location.href='login.php'">Login</button>
     </div>
 </body>
 </html>
