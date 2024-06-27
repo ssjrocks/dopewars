@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Reset user state
-$stmt = $conn->prepare("UPDATE users SET cash = 2000, location_id = 1, debt = 5500, health = 100 WHERE id = :id");
+$stmt = $conn->prepare("UPDATE users SET cash = 2000, bank = 0, debt = 5500, health = 100, location_id = 1 WHERE id = :id");
 $stmt->bindParam(':id', $user_id);
 $stmt->execute();
 
