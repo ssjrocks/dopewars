@@ -82,6 +82,19 @@ body {
     background-color: #b3d4fc;
 }
 
+.buy-buttons, .sell-buttons {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.buy-buttons button, .sell-buttons button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
 .actions {
     text-align: center;
     margin: 20px 0;

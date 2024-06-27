@@ -67,17 +67,25 @@ $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
                         </li>
                     <?php endforeach; ?>
                 </ul>
+                <div class="buy-buttons">
+                    <button>Buy One</button>
+                    <button>Buy Two</button>
+                    <button>Buy Three</button>
+                </div>
             </div>
             <div class="inventory">
                 <h2>Trenchcoat. Space: 100/100</h2>
                 <ul>
                     <!-- Inventory items will be populated here -->
                 </ul>
+                <div class="sell-buttons">
+                    <button>Sell One</button>
+                    <button>Sell Two</button>
+                    <button>Sell Three</button>
+                </div>
             </div>
         </div>
         <div class="actions">
-            <button>Buy</button>
-            <button>Sell</button>
             <button>Finances</button>
         </div>
         <div class="footer">
