@@ -18,15 +18,15 @@ if (empty($good_id) || empty($quantity)) {
     exit();
 }
 
-// Fetch good price
+// Fetch current good price from the goods table
 $stmt = $conn->prepare("SELECT * FROM goods WHERE id = :id");
 $stmt->bindParam(':id', $good_id);
 $stmt->execute();
 $good = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($good) {
-    $price = rand($good['min_price'], $good['max_price']);
-    $total_revenue = $price * $quantity;
+    $current_price = rand($good['min_price'], $good['max_price']);
+    $total_revenue = $current_price * $quantity;
 
     // Check if user has enough quantity to sell
     $stmt = $conn->prepare("SELECT quantity FROM inventory WHERE user_id = :user_id AND good_id = :good_id");
