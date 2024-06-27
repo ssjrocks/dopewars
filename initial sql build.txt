@@ -1,0 +1,44 @@
+CREATE DATABASE dopewars;
+
+USE dopewars;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    cash DECIMAL(10, 2) DEFAULT 2000.00
+);
+
+CREATE TABLE goods (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    min_price DECIMAL(10, 2) NOT NULL,
+    max_price DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE inventory (
+    user_id INT,
+    good_id INT,
+    quantity INT DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (good_id) REFERENCES goods(id)
+);
+
+CREATE TABLE locations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+INSERT INTO goods (name, min_price, max_price) VALUES
+('Cocaine', 1000, 5000),
+('Heroin', 500, 2500),
+('Meth', 300, 1500),
+('Weed', 50, 300),
+('Acid', 10, 50);
+
+INSERT INTO locations (name) VALUES
+('New York'),
+('Los Angeles'),
+('Chicago'),
+('Houston'),
+('Miami');
