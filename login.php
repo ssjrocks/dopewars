@@ -39,9 +39,9 @@ $total_users = $stmt->fetch(PDO::FETCH_ASSOC)['total_users'];
             Password: <input type="password" name="password" required>
             <button type="submit">Login</button>
         </form>
-        <p>Total Users: <?php echo $total_users; ?></p>
         <button onclick="window.location.href='register.php'">Register</button>
         <button onclick="window.location.href='forgot_password.php'">Forgot Password</button>
+        <p>Total Users: <?php echo $total_users; ?></p>
     </div>
 </body>
 </html>
