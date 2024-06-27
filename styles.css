@@ -40,7 +40,6 @@ form button, .container button, .game-container button, .green-button {
     border: none;
     cursor: pointer;
     border-radius: 4px;
-    margin-bottom: 8px;
     width: 100%;
 }
 
@@ -84,7 +83,7 @@ p {
 }
 
 .locations button {
-    margin: 5px;
+    margin: 0;
     padding: 8px 20px;
     background-color: #5cb85c;
     border: 1px solid #ccc;
@@ -135,7 +134,7 @@ p {
 
 .buy-buttons, .sell-buttons {
     text-align: center;
-    margin-top: 10px;
+    margin-top: 0;
 }
 
 .buy-buttons form, .sell-buttons form {
@@ -145,7 +144,7 @@ p {
 
 .buy-buttons button, .sell-buttons button {
     padding: 6px 10px;
-    margin: 5px 0;
+    margin: 0;
     background-color: #5cb85c;
     border: none;
     cursor: pointer;
@@ -158,12 +157,13 @@ p {
 
 .finances-button {
     text-align: center;
-    margin-top: 10px;
+    margin-top: 0;
 }
 
 .finances-button .green-button {
     width: calc(100% - 40px); /* Adjust width to be centered and full width */
     margin: 0 auto;
+    margin-top: -8px; /* Align with the bottom edge of the Buy Three and Sell Three buttons */
 }
 
 .actions {
@@ -173,5 +173,29 @@ p {
 
 .actions button {
     padding: 8px 20px;
-    margin: 0
+    margin: 0 10px;
+    background-color: #5cb85c;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.actions button:hover {
+    background-color: #4cae4c;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.footer button {
+    padding: 8px 20px;
+    margin: 0 10px;
+    background-color: #5cb85c;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.footer button:hover {
+    background-color: #4cae4c;
 }
