@@ -43,7 +43,7 @@ if ($good) {
 
         // Update user inventory
         $stmt = $conn->prepare("INSERT INTO inventory (user_id, good_id, quantity) VALUES (:user_id, :good_id, :quantity)
-                                ON DUPLICATE KEY UPDATE quantity = quantity + :quantity");
+                                ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)");
         $stmt->bindParam(':user_id', $user_id);
         $stmt->bindParam(':good_id', $good_id);
         $stmt->bindParam(':quantity', $quantity);

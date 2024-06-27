@@ -25,8 +25,14 @@ $locations_stmt = $conn->prepare("SELECT * FROM locations");
 $locations_stmt->execute();
 $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Assume current location is stored in session or user data for simplicity
-$current_location_id = $user['location_id'];
+// Fetch current location name
+$current_location = '';
+foreach ($locations as $location) {
+    if ($location['id'] == $current_location_id) {
+        $current_location = $location['name'];
+        break;
+    }
+}
 
 // Handle errors
 $error_message = '';
@@ -70,14 +76,14 @@ if (isset($_GET['error'])) {
             <h1>DopeWars</h1>
         </div>
         <div class="status">
-            <div>Cash: $<?php echo $user['cash']; ?></div>
-            <div>Bank: $<?php echo $user['bank']; ?></div>
-            <div>Debt: $<?php echo $user['debt']; ?></div>
+            <div>Cash: $<span id="cash"><?php echo number_format($user['cash'], 2); ?></span></div>
+            <div>Bank: $<span id="bank"><?php echo number_format($user['bank'], 2); ?></span></div>
+            <div>Debt: $<span id="debt"><?php echo number_format($user['debt'], 2); ?></span></div>
             <div>Guns: 0</div>
             <div>Health: 100%</div>
         </div>
         <div class="locations">
-            <h2>Subway from:</h2>
+            <h2>Subway from: <?php echo $current_location; ?></h2>
             <select id="location-select">
                 <?php foreach ($locations as $location): ?>
                     <option value="<?php echo $location['id']; ?>" <?php echo $location['id'] == $current_location_id ? 'selected' : ''; ?>>
@@ -213,9 +219,9 @@ if (isset($_GET['error'])) {
         }
 
         function updateUserInfo(user) {
-            document.querySelector('.status div:nth-child(1)').textContent = `Cash: $${user.cash}`;
-            document.querySelector('.status div:nth-child(2)').textContent = `Bank: $${user.bank}`;
-            document.querySelector('.status div:nth-child(3)').textContent = `Debt: $${user.debt}`;
+            document.getElementById('cash').textContent = user.cash.toFixed(2);
+            document.getElementById('bank').textContent = user.bank.toFixed(2);
+            document.getElementById('debt').textContent = user.debt.toFixed(2);
         }
 
         function updateInventory(inventory) {
