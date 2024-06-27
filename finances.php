@@ -14,65 +14,6 @@ $stmt = $conn->prepare("SELECT cash, bank, debt, health FROM users WHERE id = :i
 $stmt->bindParam(':id', $user_id);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$error_message = '';
-
-// Handle repayments, deposits, and withdrawals
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['repay_amount'])) {
-        $repay_amount = (float) $_POST['repay_amount'];
-        if ($repay_amount > 0 && $repay_amount <= $user['cash'] && $repay_amount <= $user['debt']) {
-            $stmt = $conn->prepare("UPDATE users SET cash = cash - :repay_amount, debt = debt - :repay_amount WHERE id = :id");
-            $stmt->bindParam(':repay_amount', $repay_amount);
-            $stmt->bindParam(':id', $user_id);
-            $stmt->execute();
-        } else {
-            $error_message = 'Insufficient funds';
-        }
-    }
-
-    if (isset($_POST['cash_advance'])) {
-        $advance_amount = (float) $_POST['cash_advance'];
-        if ($advance_amount > 0) {
-            $stmt = $conn->prepare("UPDATE users SET cash = cash + :advance_amount, debt = debt + :advance_amount WHERE id = :id");
-            $stmt->bindParam(':advance_amount', $advance_amount);
-            $stmt->bindParam(':id', $user_id);
-            $stmt->execute();
-        } else {
-            $error_message = 'Insufficient funds';
-        }
-    }
-
-    if (isset($_POST['deposit_amount'])) {
-        $deposit_amount = (float) $_POST['deposit_amount'];
-        if ($deposit_amount > 0 && $deposit_amount <= $user['cash']) {
-            $stmt = $conn->prepare("UPDATE users SET cash = cash - :deposit_amount, bank = bank + :deposit_amount WHERE id = :id");
-            $stmt->bindParam(':deposit_amount', $deposit_amount);
-            $stmt->bindParam(':id', $user_id);
-            $stmt->execute();
-        } else {
-            $error_message = 'Insufficient funds';
-        }
-    }
-
-    if (isset($_POST['withdraw_amount'])) {
-        $withdraw_amount = (float) $_POST['withdraw_amount'];
-        if ($withdraw_amount > 0 && $withdraw_amount <= $user['bank']) {
-            $stmt = $conn->prepare("UPDATE users SET cash = cash + :withdraw_amount, bank = bank - :withdraw_amount WHERE id = :id");
-            $stmt->bindParam(':withdraw_amount', $withdraw_amount);
-            $stmt->bindParam(':id', $user_id);
-            $stmt->execute();
-        } else {
-            $error_message = 'Insufficient funds';
-        }
-    }
-
-    // Refresh the user data after updates
-    $stmt = $conn->prepare("SELECT cash, bank, debt, health FROM users WHERE id = :id");
-    $stmt->bindParam(':id', $user_id);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -96,33 +37,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="container">
         <h1>Finances</h1>
-        <p>Cash: $<?php echo number_format($user['cash'], 2); ?></p>
-        <p>Bank: $<?php echo number_format($user['bank'], 2); ?></p>
-        <p>Debt: $<?php echo number_format($user['debt'], 2); ?></p>
+        <p id="cash">Cash: $<?php echo number_format($user['cash'], 2); ?></p>
+        <p id="bank">Bank: $<?php echo number_format($user['bank'], 2); ?></p>
+        <p id="debt">Debt: $<?php echo number_format($user['debt'], 2); ?></p>
         <p>Health: <?php echo $user['health']; ?>%</p>
-        <?php if ($error_message): ?>
-            <p id="error-message" class="error-message"><?php echo $error_message; ?></p>
-        <?php endif; ?>
+        <p id="error-message" class="error-message" style="display: none;"></p>
 
-        <form method="POST">
+        <form id="repay-form" method="POST">
             <h3>Repay Loan</h3>
             <input type="number" name="repay_amount" step="0.01" placeholder="Amount to repay" required>
             <button type="submit" class="green-button">Repay</button>
         </form>
 
-        <form method="POST">
+        <form id="advance-form" method="POST">
             <h3>Get Cash Advance</h3>
             <input type="number" name="cash_advance" step="0.01" placeholder="Amount to borrow" required>
             <button type="submit" class="green-button">Get Advance</button>
         </form>
 
-        <form method="POST">
+        <form id="deposit-form" method="POST">
             <h3>Deposit Money</h3>
             <input type="number" name="deposit_amount" step="0.01" placeholder="Amount to deposit" required>
             <button type="submit" class="green-button">Deposit</button>
         </form>
 
-        <form method="POST">
+        <form id="withdraw-form" method="POST">
             <h3>Withdraw Money</h3>
             <input type="number" name="withdraw_amount" step="0.01" placeholder="Amount to withdraw" required>
             <button type="submit" class="green-button">Withdraw</button>
@@ -131,12 +70,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <button class="green-button" onclick="window.location.href='game.php'">Back to Game</button>
     </div>
     <script>
-        // Hide the error message after 3 seconds
-        if (document.getElementById('error-message')) {
-            setTimeout(function() {
-                document.getElementById('error-message').style.display = 'none';
-            }, 3000);
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            function handleFormSubmission(formId) {
+                const form = document.getElementById(formId);
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(form);
+                    fetch('handle_finances.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'error') {
+                            showError(data.message);
+                        } else {
+                            updateUserInfo(data.user);
+                        }
+                    });
+                });
+            }
+
+            function showError(message) {
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
+            }
+
+            function updateUserInfo(user) {
+                document.getElementById('cash').textContent = `Cash: $${parseFloat(user.cash).toFixed(2)}`;
+                document.getElementById('bank').textContent = `Bank: $${parseFloat(user.bank).toFixed(2)}`;
+                document.getElementById('debt').textContent = `Debt: $${parseFloat(user.debt).toFixed(2)}`;
+            }
+
+            handleFormSubmission('repay-form');
+            handleFormSubmission('advance-form');
+            handleFormSubmission('deposit-form');
+            handleFormSubmission('withdraw-form');
+        });
     </script>
 </body>
 </html>
