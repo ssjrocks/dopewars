@@ -7,121 +7,60 @@ body {
 }
 
 .container {
-    width: 800px;
-    margin: 0 auto;
+    width: 300px;
+    margin: 50px auto;
     background-color: #fff;
     border: 1px solid #ccc;
     padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-.header {
+h1 {
     text-align: center;
+    margin-bottom: 20px;
 }
 
-.status {
+form {
     display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
+    flex-direction: column;
 }
 
-.status div {
-    background-color: #eee;
-    padding: 10px;
-    border: 1px solid #ccc;
-    width: 100px;
-    text-align: center;
-}
-
-.locations {
-    margin: 20px 0;
-    text-align: center;
-}
-
-.locations h2 {
+form input {
     margin-bottom: 10px;
-}
-
-.locations button {
-    margin: 5px;
-    padding: 10px 20px;
-    background-color: #ddd;
-    border: 1px solid #ccc;
-    cursor: pointer;
-}
-
-.current-location {
-    background-color: #b3d4fc;
-    border: 1px solid #333;
-}
-
-.main-content {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px 0;
-}
-
-.goods, .inventory {
-    width: 48%;
-}
-
-.goods ul, .inventory ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    border: 1px solid #ccc;
-    height: 200px;
-    overflow-y: auto;
-    background-color: #f9f9f9;
-}
-
-.goods li, .inventory li {
     padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    padding: 10px;
+    background-color: #5cb85c;
+    color: #fff;
+    border: none;
     cursor: pointer;
+    border-radius: 4px;
 }
 
-.selectable:hover {
-    background-color: #e9e9e9;
+form button:hover {
+    background-color: #4cae4c;
 }
 
-.selected {
-    background-color: #b3d4fc;
-}
-
-.buy-buttons, .sell-buttons {
+p {
     text-align: center;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
     margin-top: 10px;
-}
-
-.buy-buttons button, .sell-buttons button {
-    padding: 5px 10px;
-    margin: 0 5px;
-    background-color: #ddd;
-    border: 1px solid #ccc;
+    background-color: #337ab7;
+    color: #fff;
+    border: none;
     cursor: pointer;
+    border-radius: 4px;
 }
 
-.actions {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.actions button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    background-color: #ddd;
-    border: 1px solid #ccc;
-    cursor: pointer;
-}
-
-.footer {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.footer button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    background-color: #ddd;
-    border: 1px solid #ccc;
-    cursor: pointer;
+button:hover {
+    background-color: #286090;
 }
