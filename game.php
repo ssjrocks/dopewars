@@ -28,6 +28,24 @@ $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
 // Assume current location is stored in session or user data for simplicity
 $current_location_id = $user['location_id'];
 
+// Handle errors
+$error_message = '';
+if (isset($_GET['error'])) {
+    switch ($_GET['error']) {
+        case 'invalid_buy':
+            $error_message = "You wanna buy nothing?";
+            break;
+        case 'insufficient_cash':
+            $error_message = "You can't afford that.";
+            break;
+        case 'invalid_sell':
+            $error_message = "You wanna sell nothing?";
+            break;
+        case 'insufficient_inventory':
+            $error_message = "You don't have enough inventory.";
+            break;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,6 +57,7 @@ $current_location_id = $user['location_id'];
             var items = document.querySelectorAll('.selectable');
             items.forEach(item => item.classList.remove('selected'));
             event.currentTarget.classList.add('selected');
+            document.querySelector('input[name="good_id"]').value = event.currentTarget.dataset.id;
         }
     </script>
 </head>
@@ -49,8 +68,8 @@ $current_location_id = $user['location_id'];
         </div>
         <div class="status">
             <div>Cash: $<?php echo $user['cash']; ?></div>
-            <div>Bank: $0</div>
-            <div>Debt: $5,500</div>
+            <div>Bank: $<?php echo $user['bank']; ?></div>
+            <div>Debt: $<?php echo $user['debt']; ?></div>
             <div>Guns: 0</div>
             <div>Health: 100%</div>
         </div>
@@ -68,9 +87,12 @@ $current_location_id = $user['location_id'];
         <div class="main-content">
             <div class="goods">
                 <h2>Available Drugs:</h2>
+                <?php if ($error_message): ?>
+                    <p class="error"><?php echo $error_message; ?></p>
+                <?php endif; ?>
                 <ul>
                     <?php foreach ($goods as $good): ?>
-                        <li class="selectable" onclick="selectItem(event)">
+                        <li class="selectable" data-id="<?php echo $good['id']; ?>" onclick="selectItem(event)">
                             <?php echo $good['name'] . " - $" . rand($good['min_price'], $good['max_price']); ?>
                         </li>
                     <?php endforeach; ?>
