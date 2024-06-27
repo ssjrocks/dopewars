@@ -25,6 +25,9 @@ $locations_stmt = $conn->prepare("SELECT * FROM locations");
 $locations_stmt->execute();
 $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Assume current location is stored in session or user data for simplicity
+$current_location_id = 1; // Example current location id
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,9 +55,11 @@ $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
             <div>Health: 100%</div>
         </div>
         <div class="locations">
-            <h2>Subway from Bronx:</h2>
+            <h2>Subway from:</h2>
             <?php foreach ($locations as $location): ?>
-                <button><?php echo $location['name']; ?></button>
+                <button class="<?php echo $location['id'] == $current_location_id ? 'current-location' : ''; ?>">
+                    <?php echo $location['name']; ?>
+                </button>
             <?php endforeach; ?>
         </div>
         <div class="main-content">
@@ -74,7 +79,7 @@ $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
             <div class="inventory">
-                <h2>Trenchcoat. Space: 100/100</h2>
+                <h2>Trenchcoat: Usage 0/100</h2>
                 <ul>
                     <!-- Inventory items will be populated here -->
                 </ul>

@@ -49,6 +49,11 @@ body {
     cursor: pointer;
 }
 
+.current-location {
+    background-color: #b3d4fc;
+    border: 1px solid #333;
+}
+
 .main-content {
     display: flex;
     justify-content: space-between;
