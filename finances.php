@@ -15,6 +15,8 @@ $stmt->bindParam(':id', $user_id);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+$error_message = '';
+
 // Handle repayments, deposits, and withdrawals
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['repay_amount'])) {
@@ -24,6 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bindParam(':repay_amount', $repay_amount);
             $stmt->bindParam(':id', $user_id);
             $stmt->execute();
+        } else {
+            $error_message = 'Insufficient funds';
         }
     }
 
@@ -34,6 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bindParam(':advance_amount', $advance_amount);
             $stmt->bindParam(':id', $user_id);
             $stmt->execute();
+        } else {
+            $error_message = 'Insufficient funds';
         }
     }
 
@@ -44,6 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bindParam(':deposit_amount', $deposit_amount);
             $stmt->bindParam(':id', $user_id);
             $stmt->execute();
+        } else {
+            $error_message = 'Insufficient funds';
         }
     }
 
@@ -54,6 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bindParam(':withdraw_amount', $withdraw_amount);
             $stmt->bindParam(':id', $user_id);
             $stmt->execute();
+        } else {
+            $error_message = 'Insufficient funds';
         }
     }
 
@@ -69,6 +79,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <title>Finances</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        .error-message {
+            color: red;
+            font-weight: bold;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                visibility: hidden;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -77,6 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <p>Bank: $<?php echo number_format($user['bank'], 2); ?></p>
         <p>Debt: $<?php echo number_format($user['debt'], 2); ?></p>
         <p>Health: <?php echo $user['health']; ?>%</p>
+        <?php if ($error_message): ?>
+            <p id="error-message" class="error-message"><?php echo $error_message; ?></p>
+        <?php endif; ?>
 
         <form method="POST">
             <h3>Repay Loan</h3>
@@ -104,5 +130,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <button class="green-button" onclick="window.location.href='game.php'">Back to Game</button>
     </div>
+    <script>
+        // Hide the error message after 3 seconds
+        if (document.getElementById('error-message')) {
+            setTimeout(function() {
+                document.getElementById('error-message').style.display = 'none';
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
