@@ -49,8 +49,14 @@ body {
     cursor: pointer;
 }
 
-.goods, .inventory {
+.main-content {
+    display: flex;
+    justify-content: space-between;
     margin: 20px 0;
+}
+
+.goods, .inventory {
+    width: 48%;
 }
 
 .goods table, .inventory table {
