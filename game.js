@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            console.log('Buy response:', data); // Log response for debugging
             if (data.status === 'error') {
                 showError(data.message);
             } else {
@@ -105,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            console.log('Sell response:', data); // Log response for debugging
             if (data.status === 'error') {
                 showError(data.message);
             } else {
