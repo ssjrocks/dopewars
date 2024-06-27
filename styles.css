@@ -1,52 +1,91 @@
-/* Add your CSS styling here */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     color: #333;
     padding: 20px;
+    margin: 0;
 }
 
-h1, h2 {
-    color: #444;
+.container {
+    width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
 }
 
-table {
+.header {
+    text-align: center;
+}
+
+.status {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+
+.status div {
+    background-color: #eee;
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 100px;
+    text-align: center;
+}
+
+.locations {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.locations h2 {
+    margin-bottom: 10px;
+}
+
+.locations button {
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.goods, .inventory {
+    margin: 20px 0;
+}
+
+.goods table, .inventory table {
     width: 100%;
     border-collapse: collapse;
 }
 
-table, th, td {
-    border: 1px solid #ddd;
-}
-
-th, td {
+.goods th, .inventory th, .goods td, .inventory td {
+    border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
 }
 
-th {
-    background-color: #f2f2f2;
+.actions {
+    text-align: center;
+    margin: 20px 0;
 }
 
-button {
-    padding: 5px 10px;
-    background-color: #5cb85c;
-    color: #fff;
-    border: none;
+.actions button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #4cae4c;
+.footer {
+    text-align: center;
+    margin-top: 20px;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-ul li {
-    padding: 8px;
-    background-color: #f2f2f2;
-    margin-bottom: 5px;
+.footer button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    cursor: pointer;
 }

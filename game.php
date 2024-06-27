@@ -1,4 +1,3 @@
-// game.php
 <?php
 include 'db.php';
 session_start();
@@ -31,44 +30,61 @@ $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
 <html>
 <head>
     <title>DopeWars</title>
-    <style>
-        /* Add your CSS styling here */
-    </style>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-    <h1>Welcome, <?php echo $user['username']; ?>!</h1>
-    <p>Cash: $<?php echo $user['cash']; ?></p>
-    
-    <h2>Goods</h2>
-    <table>
-        <tr>
-            <th>Good</th>
-            <th>Price</th>
-            <th>Action</th>
-        </tr>
-        <?php foreach ($goods as $good): ?>
-            <tr>
-                <td><?php echo $good['name']; ?></td>
-                <td><?php echo rand($good['min_price'], $good['max_price']); ?></td>
-                <td>
-                    <form method="POST" action="buy.php">
-                        <input type="hidden" name="good_id" value="<?php echo $good['id']; ?>">
-                        <button type="submit">Buy</button>
-                    </form>
-                    <form method="POST" action="sell.php">
-                        <input type="hidden" name="good_id" value="<?php echo $good['id']; ?>">
-                        <button type="submit">Sell</button>
-                    </form>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-
-    <h2>Locations</h2>
-    <ul>
-        <?php foreach ($locations as $location): ?>
-            <li><?php echo $location['name']; ?></li>
-        <?php endforeach; ?>
-    </ul>
+    <div class="container">
+        <div class="header">
+            <h1>DopeWars</h1>
+        </div>
+        <div class="status">
+            <div>Cash: $<?php echo $user['cash']; ?></div>
+            <div>Bank: $0</div>
+            <div>Debt: $5,500</div>
+            <div>Guns: 0</div>
+            <div>Health: 100%</div>
+        </div>
+        <div class="locations">
+            <h2>Subway from Bronx:</h2>
+            <?php foreach ($locations as $location): ?>
+                <button><?php echo $location['name']; ?></button>
+            <?php endforeach; ?>
+        </div>
+        <div class="goods">
+            <h2>Available Drugs:</h2>
+            <table>
+                <tr>
+                    <th>Drug</th>
+                    <th>Price</th>
+                </tr>
+                <?php foreach ($goods as $good): ?>
+                    <tr>
+                        <td><?php echo $good['name']; ?></td>
+                        <td><?php echo rand($good['min_price'], $good['max_price']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+        <div class="actions">
+            <button>Buy</button>
+            <button>Sell</button>
+            <button>Finances</button>
+        </div>
+        <div class="inventory">
+            <h2>Trenchcoat. Space: 100/100</h2>
+            <table>
+                <tr>
+                    <th>Drug</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                </tr>
+                <!-- Inventory items will be populated here -->
+            </table>
+        </div>
+        <div class="footer">
+            <button>New Game</button>
+            <button>Exit</button>
+        </div>
+    </div>
 </body>
 </html>
