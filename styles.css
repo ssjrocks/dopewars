@@ -7,8 +7,8 @@ body {
     margin: 0;
 }
 
-.container {
-    width: 300px;
+.container, .game-container {
+    width: 800px;
     margin: 50px auto;
     background-color: #fff;
     border: 1px solid #ccc;
@@ -33,7 +33,7 @@ form input {
     border-radius: 4px;
 }
 
-form button, .container button {
+form button, .container button, .game-container button {
     padding: 10px;
     background-color: #5cb85c;
     color: #fff;
@@ -44,29 +44,20 @@ form button, .container button {
     width: 100%;
 }
 
-form button:hover, .container button:hover {
+form button:hover, .container button:hover, .game-container button:hover {
     background-color: #4cae4c;
 }
 
-.container button.alt {
+.container button.alt, .game-container button.alt {
     background-color: #337ab7;
 }
 
-.container button.alt:hover {
+.container button.alt:hover, .game-container button.alt:hover {
     background-color: #286090;
 }
 
 p {
     margin-top: 10px;
-}
-
-/* Game Page Styles */
-.game-container {
-    width: 800px;
-    margin: 0 auto;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 20px;
 }
 
 .status {

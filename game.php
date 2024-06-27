@@ -26,7 +26,7 @@ $locations_stmt->execute();
 $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Assume current location is stored in session or user data for simplicity
-$current_location_id = 1; // Example current location id
+$current_location_id = $user['location_id'];
 
 ?>
 <!DOCTYPE html>
