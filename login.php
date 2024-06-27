@@ -1,4 +1,3 @@
-
 <?php
 include 'db.php';
 
@@ -20,6 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "Invalid credentials";
     }
 }
+
+// Fetch total users
+$stmt = $conn->prepare("SELECT COUNT(*) as total_users FROM users");
+$stmt->execute();
+$total_users = $stmt->fetch(PDO::FETCH_ASSOC)['total_users'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,5 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         Password: <input type="password" name="password" required>
         <button type="submit">Login</button>
     </form>
+    <p>Total Users: <?php echo $total_users; ?></p>
 </body>
 </html>
