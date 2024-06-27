@@ -59,14 +59,27 @@ body {
     width: 48%;
 }
 
-.goods textarea, .inventory textarea {
-    width: 100%;
-    height: 200px;
+.goods ul, .inventory ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
     border: 1px solid #ccc;
-    padding: 10px;
-    font-family: monospace;
+    height: 200px;
+    overflow-y: auto;
     background-color: #f9f9f9;
-    resize: none;
+}
+
+.goods li, .inventory li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.selectable:hover {
+    background-color: #e9e9e9;
+}
+
+.selected {
+    background-color: #b3d4fc;
 }
 
 .actions {

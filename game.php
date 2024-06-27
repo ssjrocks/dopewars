@@ -31,6 +31,13 @@ $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <title>DopeWars</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <script>
+        function selectItem(event) {
+            var items = document.querySelectorAll('.selectable');
+            items.forEach(item => item.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -53,17 +60,19 @@ $locations = $locations_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="main-content">
             <div class="goods">
                 <h2>Available Drugs:</h2>
-                <textarea rows="10" readonly>
+                <ul>
                     <?php foreach ($goods as $good): ?>
-                        <?php echo $good['name'] . " - $" . rand($good['min_price'], $good['max_price']) . "\n"; ?>
+                        <li class="selectable" onclick="selectItem(event)">
+                            <?php echo $good['name'] . " - $" . rand($good['min_price'], $good['max_price']); ?>
+                        </li>
                     <?php endforeach; ?>
-                </textarea>
+                </ul>
             </div>
             <div class="inventory">
                 <h2>Trenchcoat. Space: 100/100</h2>
-                <textarea rows="10" readonly>
+                <ul>
                     <!-- Inventory items will be populated here -->
-                </textarea>
+                </ul>
             </div>
         </div>
         <div class="actions">
